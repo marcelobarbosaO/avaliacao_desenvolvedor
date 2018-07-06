@@ -4,6 +4,8 @@
 
 * `Rails 5.2.0`
 
+* `Sqlite 3.19.3`
+
 **Rode em um terminal os seguintes comandos**
 
 * `git clone https://github.com/marcelobarbosaO/avaliacao_desenvolvedor.git`
