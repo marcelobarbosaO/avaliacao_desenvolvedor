@@ -30,8 +30,8 @@
           <td><%= sale.address.name %></td>
           <td><%= sale.vendor.name %></td>
           <td>
-            <%= link_to sale_path(sale), method: :delete, data: {confirm: t('warnings.question')}, class: "btn btn-flat red white-text waves-effect waves-light", remote: true do %>
-              <i class="material-icons">clear</i>
+            <%= link_to sale_path(sale), method: :delete, data: {confirm: t('warnings.question')}, class: "btn-floating red white-text waves-effect waves-light", remote: true do %>
+              <i class="material-icons">delete</i>
             <% end %>
           </td>
         </tr>
@@ -41,13 +41,33 @@
 </table>
 
 <div class="fixed-action-btn">
-  <%= link_to new_sale_path, { 'data-position':'top', 'data-tooltip':t('labels.upload_file'), class: 'btn-floating btn-large waves-effect waves-light cyan tooltipped'} do %>
+  <a class="btn-floating btn-large waves-effect waves-light cyan tooltipped openModal" data-position="top" data-tooltip="<%= t('labels.upload_file') %>">
     <i class="material-icons">add</i>
-  <% end %>
+  </a>
+</div>
+
+<div id="modalUpload" class="modal">
+  <div class="modal-content">
+    <h4><%= t('headings.new_file') %></h4>
+    <div class="divider"></div>
+    <div class="row center-align nm">
+      <%= render 'form' %>
+    </div>
+  </div>
 </div>
 
 <script>
   $(document).ready(function(){
+    $('.modal').modal();
     $('.tooltipped').tooltip();
+    $(".openModal").on("click", function(e){
+      e.preventDefault();
+      $("#modalUpload").modal("open");
+    });
+
+    $(".closeModal").on("click", function(e){
+      e.preventDefault();
+      $("#modalUpload").modal("close");
+    });
   });
 </script>

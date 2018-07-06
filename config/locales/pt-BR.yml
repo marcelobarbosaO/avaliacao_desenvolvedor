@@ -30,6 +30,7 @@ pt-BR:
     list_sales: Lista de Receitas
   buttons:
     send: Enviar
+    cancel: Cancelar
   sales:
     new:
       success: "Dados salvos com sucesso. Valor bruto total importado de: %{value}"

@@ -8,15 +8,6 @@ class SalesController < ApplicationController
   def new
   end
 
-  def create
-    byebug
-    document = sale_upload_params[:file].read.force_encoding('UTF-8')
-    document = document.split("\n")
-    document.shift
-    @data = []
-    document.each {|i| @data.push(i.split("\t")) }
-  end
-
   def destroy
     @sale = Sale.find(params[:id])
     @sale.destroy!

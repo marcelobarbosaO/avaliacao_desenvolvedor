@@ -1,70 +1,87 @@
 require 'rails_helper'
 
 describe Sale do
-  describe 'Create' do
+  describe '#save' do
     before do
-      @customer = create_or_find_customer
-      @address = create_or_find_address
-      @vendor = create_or_find_vendor
+      @customer = Customer.create!(customer_params)
+      @address = Address.create!(address_params)
+      @vendor = Vendor.create!(vendor_params)
       @sale = Sale.new(sale_params.merge({ 
         customer: @customer, address: @address, vendor: @vendor
       }))
     end
 
-    context 'with success' do
-      it 'create sale' do
-        sale = @sale.save!
-        expect(sale).to eq(true)
-      end
-    end
+    context 'validates' do
+      context 'with customer and address and vendor' do
+        it 'create sale' do
+          expect{
+            @sale.save!
+          }.to change { Sale.count }.by(1)
+        end
 
-    context 'fails' do
-      it 'does not create sale without customer' do
-        sale = Sale.new(sale_params.merge({ 
-          address: @address, vendor: @vendor
-        }))
-        expect {
-          sale.save
-        }.to change { Sale.count }.by(0)
+        it 'sale is valid' do 
+          expect(@sale.valid?).to be_truthy
+        end
       end
 
-      it 'does not create sale without address' do
-        sale = Sale.new(sale_params.merge({ 
-          customer: @customer, vendor: @vendor
-        }))
-        expect {
-          sale.save
-        }.to change { Sale.count }.by(0)
+      context 'without customer' do
+        before do
+          @sale_without_customer = Sale.new(sale_params.merge({ 
+            address: @address, vendor: @vendor
+          }))
+        end
+
+        it 'does not creates sale' do 
+          expect {
+            @sale_without_customer.save
+          }.to change { Sale.count }.by(0)
+        end
+
+        it 'sale is invalid' do 
+          expect(@sale_without_customer.valid?).to be_falsey
+        end
       end
 
-      it 'does not create sale without vendor' do
-        sale = Sale.new(sale_params.merge({ 
-          customer: @customer, address: @address
-        }))
-        expect {
-          sale.save
-        }.to change { Sale.count }.by(0)
+      context 'without address' do
+        before do
+          @sale_without_address = Sale.new(sale_params.merge({ 
+            customer: @customer, vendor: @vendor
+          }))
+        end
+        
+        it 'does not creates sale' do 
+          expect {
+            @sale_without_address.save
+          }.to change { Sale.count }.by(0)
+        end
+
+        it 'sale is invalid' do 
+          expect(@sale_without_address.valid?).to be_falsey
+        end
+      end
+
+      context 'without vendor' do
+        before do
+          @sale_without_vendor = Sale.new(sale_params.merge({ 
+            customer: @customer, address: @address
+          }))
+        end
+        
+        it 'does not creates sale' do 
+          expect {
+            @sale_without_vendor.save
+          }.to change { Sale.count }.by(0)
+        end
+
+        it 'sale is invalid' do 
+          expect(@sale_without_vendor.valid?).to be_falsey
+        end
       end
     end
   end
 
   def sale_params
     { description: 'Oferta nova de Cereal', quantity: 6, unit_price: 10.0}
-  end
-
-  def create_or_find_customer
-    customer = Customer.where(name: customer_params[:name]).last
-    customer ||= Customer.create!(customer_params)
-  end
-
-  def create_or_find_address
-    address = Address.where(name: address_params[:name]).last
-    address ||= Address.create!(address_params)
-  end
-
-  def create_or_find_vendor
-    vendor = Vendor.where(name: vendor_params[:name]).last
-    vendor ||= Vendor.create!(vendor_params)
   end
 
   def customer_params
