@@ -5,9 +5,6 @@ class SalesController < ApplicationController
     @sales = Sale.all
   end
 
-  def new
-  end
-
   def destroy
     @sale = Sale.find(params[:id])
     @sale.destroy!
